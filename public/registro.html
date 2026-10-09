@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Aroma - Registro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .register-container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+        .sensory-section {
+            background: #f8f9fa;
+            border-left: 4px solid #6f4e37;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-coffee me-2"></i>Café Aroma Inclusivo
+            </a>
+            <a href="/" class="btn btn-outline-light btn-sm">Inicio</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="register-container">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-user-plus me-2"></i>Crear Cuenta
+            </h2>
+            <p class="text-center text-muted">
+                Personaliza tu experiencia antes de llegar
+            </p>
+
+            <form id="registerForm">
+                <!-- Datos básicos -->
+                <div class="mb-3">
+                    <label class="form-label">Nombre completo *</label>
+                    <input type="text" class="form-control" id="regName" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Email *</label>
+                    <input type="email" class="form-control" id="regEmail" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Contraseña *</label>
+                    <input type="password" class="form-control" id="regPassword" 
+                           minlength="6" required>
+                    <small class="text-muted">Mínimo 6 caracteres</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Teléfono (opcional)</label>
+                    <input type="tel" class="form-control" id="regPhone">
+                </div>
+
+                <!-- Sección de neurodiversidad -->
+                <div class="sensory-section">
+                    <h5 class="mb-3">
+                        <i class="fas fa-brain me-2"></i>Perfil Sensorial (opcional)
+                    </h5>
+                    <p class="small text-muted">
+                        Esta información nos ayuda a preparar un ambiente cómodo para ti. 
+                        Es totalmente opcional y confidencial.
+                    </p>
+
+                    <div class="mb-3">
+                        <label class="form-label">¿Cómo te identificas?</label>
+                        <select class="form-select" id="regNeuroType">
+                            <option value="prefiero-no-decir">Prefiero no decir</option>
+                            <option value="tea">Autismo (TEA)</option>
+                            <option value="tdah">TDAH</option>
+                            <option value="hipersensibilidad">Hipersensibilidad sensorial</option>
+                            <option value="ninguna">Ninguna</option>
+                        </select>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Preferencia de ruido</label>
+                            <select class="form-select" id="regNoise">
+                                <option value="silencioso">Silencioso</option>
+                                <option value="moderado" selected>Moderado</option>
+                                <option value="ambiente">Ambiente</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Preferencia de luz</label>
+                            <select class="form-select" id="regLighting">
+                                <option value="luz-natural" selected>Luz natural</option>
+                                <option value="luz-baja">Luz baja</option>
+                                <option value="sin-luz-directa">Sin luz directa</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Tipo de asiento</label>
+                            <select class="form-select" id="regSeating">
+                                <option value="rincon-privado">Rincón privado</option>
+                                <option value="mesa-ventana">Mesa junto a ventana</option>
+                                <option value="zona-abierta">Zona abierta</option>
+                                <option value="zona-tranquila" selected>Zona tranquila</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Música</label>
+                            <select class="form-select" id="regMusic">
+                                <option value="sin-musica">Sin música</option>
+                                <option value="musica-suave" selected>Música suave</option>
+                                <option value="musica-ambiente">Música ambiente</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-check mt-3">
+                        <input class="form-check-input" type="checkbox" id="regPictogram">
+                        <label class="form-check-label" for="regPictogram">
+                            Prefiero menú con pictogramas (imágenes)
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">
+                    <i class="fas fa-user-plus me-2"></i>Crear cuenta
+                </button>
+                
+                <p class="text-center mt-3 mb-0">
+                    ¿Ya tienes cuenta? 
+                    <a href="login.html">Inicia sesión</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

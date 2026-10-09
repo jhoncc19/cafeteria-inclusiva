@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservar Mesa - Café Aroma Inclusivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .sensory-option {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        .sensory-option:hover {
+            border-color: #6f4e37;
+        }
+        .sensory-option.selected {
+            border-color: #6f4e37;
+            background: rgba(111, 78, 55, 0.1);
+        }
+        .sensory-option i {
+            font-size: 1.5rem;
+            color: #6f4e37;
+            display: block;
+            margin-bottom: 8px;
+        }
+        .noise-indicator {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .noise-silencioso { background: #d4edda; color: #155724; }
+        .noise-moderado { background: #fff3cd; color: #856404; }
+        .noise-concurrido { background: #ffe5b4; color: #8a5a00; }
+        .noise-ruidoso { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="loader-wrapper">
+        <div class="loader"><i class="fas fa-coffee"></i></div>
+    </div>
+
+    <div class="container py-5" style="margin-top: 80px;">
+        <div class="text-center mb-5">
+            <h1><i class="fas fa-calendar-check text-primary me-2"></i>Reserva tu Mesa</h1>
+            <p class="lead text-muted">
+                Personaliza tu experiencia sensorial antes de llegar
+            </p>
+        </div>
+
+        <!-- Mapa de ruido actual -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-chart-line me-2"></i>Estado del ruido ahora mismo
+            </div>
+            <div class="card-body">
+                <div class="row" id="noiseMap">
+                    <div class="col-12 text-center">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form id="reservationForm" class="card">
+            <div class="card-body p-4">
+                <h5 class="mb-3"><i class="fas fa-calendar me-2"></i>Datos de la reserva</h5>
+                
+                <div class="row g-3 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="date" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Horario</label>
+                        <select class="form-select" id="timeSlot" required>
+                            <option value="08:00-09:30">08:00 - 09:30</option>
+                            <option value="09:30-11:00">09:30 - 11:00</option>
+                            <option value="11:00-12:30">11:00 - 12:30</option>
+                            <option value="12:30-14:00">12:30 - 14:00</option>
+                            <option value="14:00-15:30" selected>14:00 - 15:30</option>
+                            <option value="15:30-17:00">15:30 - 17:00</option>
+                            <option value="17:00-18:30">17:00 - 18:30</option>
+                            <option value="18:30-20:00">18:30 - 20:00</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Personas</label>
+                        <input type="number" class="form-control" id="partySize" min="1" max="8" value="2" required>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3"><i class="fas fa-sliders-h me-2"></i>Preferencias sensoriales</h5>
+                <p class="text-muted small">
+                    Ajusta el ambiente a tu comodidad. Si no seleccionas, usaremos tus preferencias guardadas.
+                </p>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">🔊 Nivel de ruido</label>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <div class="sensory-option" data-pref="noiseLevel" data-value="silencioso" onclick="selectPref(this)">
+                                <i class="fas fa-volume-mute"></i>
+                                <div class="fw-bold">Silencioso</div>
+                                <small class="text-muted">&lt; 40 dB</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="sensory-option" data-pref="noiseLevel" data-value="moderado" onclick="selectPref(this)">
+                                <i class="fas fa-volume-down"></i>
+                                <div class="fw-bold">Moderado</div>
+                                <small class="text-muted">40-60 dB</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="sensory-option" data-pref="noiseLevel" data-value="ambiente" onclick="selectPref(this)">
+                                <i class="fas fa-volume-up"></i>
+                                <div class="fw-bold">Ambiente</div>
+                                <small class="text-muted">60-75 dB</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">💡 Iluminación</label>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <div class="sensory-option" data-pref="lighting" data-value="luz-natural" onclick="selectPref(this)">
+                                <i class="fas fa-sun"></i>
+                                <div class="fw-bold">Luz natural</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="sensory-option" data-pref="lighting" data-value="luz-baja" onclick="selectPref(this)">
+                                <i class="fas fa-moon"></i>
+                                <div class="fw-bold">Luz baja</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="sensory-option" data-pref="lighting" data-value="sin-luz-directa" onclick="selectPref(this)">
+                                <i class="fas fa-glasses"></i>
+                                <div class="fw-bold">Sin luz directa</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">🪑 Tipo de asiento</label>
+                    <div class="row g-2">
+                        <div class="col-md-3">
+                            <div class="sensory-option" data-pref="seating" data-value="zona-tranquila" onclick="selectPref(this)">
+                                <i class="fas fa-peace"></i>
+                                <div class="fw-bold small">Zona tranquila</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="sensory-option" data-pref="seating" data-value="rincon-privado" onclick="selectPref(this)">
+                                <i class="fas fa-door-closed"></i>
+                                <div class="fw-bold small">Rincón privado</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="sensory-option" data-pref="seating" data-value="mesa-ventana" onclick="selectPref(this)">
+                                <i class="fas fa-window-maximize"></i>
+                                <div class="fw-bold small">Mesa ventana</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="sensory-option" data-pref="seating" data-value="zona-abierta" onclick="selectPref(this)">
+                                <i class="fas fa-tree"></i>
+                                <div class="fw-bold small">Zona abierta</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">🎵 Volumen de música</label>
+                    <select class="form-select" id="musicVolume">
+                        <option value="sin-musica">🔇 Sin música</option>
+                        <option value="musica-suave" selected>🎵 Música suave</option>
+                        <option value="musica-ambiente">🎶 Música ambiente</option>
+                    </select>
+                </div>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3"><i class="fas fa-hands-helping me-2"></i>Necesidades especiales</h5>
+
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="needsPictogramMenu">
+                    <label class="form-check-label" for="needsPictogramMenu">
+                        <i class="fas fa-image me-2 text-primary"></i>
+                        Necesito menú con pictogramas
+                    </label>
+                </div>
+                <div class="form-check mb-2">
+                    <input class="form-check-input" type="checkbox" id="needsQuietSpace">
+                    <label class="form-check-label" for="needsQuietSpace">
+                        <i class="fas fa-volume-mute me-2 text-primary"></i>
+                        Necesito espacio silencioso
+                    </label>
+                </div>
+                <div class="form-check mb-3">
+                    <input class="form-check-input" type="checkbox" id="needsCompanion">
+                    <label class="form-check-label" for="needsCompanion">
+                        <i class="fas fa-user-friends me-2 text-primary"></i>
+                        Vendré con acompañante de apoyo
+                    </label>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Notas adicionales (opcional)</label>
+                    <textarea class="form-control" id="notes" rows="2" 
+                              placeholder="Ej: Por favor, evitar música fuerte..."
+                              maxlength="500"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg w-100">
+                    <i class="fas fa-check me-2"></i>Confirmar Reserva
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script>
+        const API_URL = '/api';
+        const token = localStorage.getItem('token');
+        
+        // Redirigir si no está logueado
+        if (!token) {
+            alert('Debes iniciar sesión para reservar');
+            window.location.href = 'login.html';
+        }
+        
+        const preferences = {
+            noiseLevel: null,
+            lighting: null,
+            seating: null
+        };
+
+        // Fecha mínima = hoy
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('date').setAttribute('min', today);
+        document.getElementById('date').value = today;
+
+        // Seleccionar preferencia
+        function selectPref(el) {
+            const pref = el.dataset.pref;
+            const value = el.dataset.value;
+            
+            document.querySelectorAll(`[data-pref="${pref}"]`)
+                .forEach(opt => opt.classList.remove('selected'));
+            
+            el.classList.add('selected');
+            preferences[pref] = value;
+        }
+
+        // Cargar mapa de ruido
+        async function loadNoiseMap() {
+            try {
+                const res = await fetch(`${API_URL}/noise/map`);
+                const data = await res.json();
+                
+                const container = document.getElementById('noiseMap');
+                container.innerHTML = '';
+                
+                if (data.success) {
+                    data.data.forEach(loc => {
+                        const category = loc.current.category || 'moderado';
+                        container.innerHTML += `
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="text-center">
+                                    <div class="fw-bold mb-2">${loc.name}</div>
+                                    <div class="noise-indicator noise-${category}">
+                                        ${category === 'silencioso' ? '🔇' : 
+                                          category === 'moderado' ? '🔉' : 
+                                          category === 'concurrido' ? '🔊' : '📢'}
+                                        ${category.toUpperCase()}
+                                    </div>
+                                    <small class="text-muted d-block mt-1">
+                                        ${loc.current.decibels || 0} dB
+                                    </small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+            } catch (error) {
+                console.error('Error cargando mapa:', error);
+            }
+        }
+
+        // Enviar reserva
+        document.getElementById('reservationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const reservationData = {
+                date: document.getElementById('date').value,
+                timeSlot: document.getElementById('timeSlot').value,
+                partySize: parseInt(document.getElementById('partySize').value),
+                sensoryPreferences: {
+                    noiseLevel: preferences.noiseLevel || 'moderado',
+                    lighting: preferences.lighting || 'luz-natural',
+                    seating: preferences.seating || 'zona-tranquila',
+                    musicVolume: document.getElementById('musicVolume').value
+                },
+                specialNeeds: {
+                    needsPictogramMenu: document.getElementById('needsPictogramMenu').checked,
+                    needsQuietSpace: document.getElementById('needsQuietSpace').checked,
+                    needsCompanion: document.getElementById('needsCompanion').checked,
+                    notes: document.getElementById('notes').value
+                }
+            };
+            
+            try {
+                const res = await fetch(`${API_URL}/reservations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(reservationData)
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert('✅ ¡Reserva creada exitosamente!\n\nTe esperamos en Café Aroma.');
+                    window.location.href = 'index.html';
+                } else {
+                    alert('❌ ' + (data.error || 'Error al crear reserva'));
+                }
+            } catch (error) {
+                alert('❌ Error de conexión');
+            }
+        });
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadNoiseMap();
+            
+            // Cargar preferencias del usuario si existen
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.neuroProfile?.defaultPreferences) {
+                const prefs = user.neuroProfile.defaultPreferences;
+                preferences.noiseLevel = prefs.noiseLevel;
+                preferences.lighting = prefs.lighting;
+                preferences.seating = prefs.seating;
+                
+                // Marcar visualmente
+                if (prefs.noiseLevel) {
+                    const el = document.querySelector(`[data-pref="noiseLevel"][data-value="${prefs.noiseLevel}"]`);
+                    if (el) el.classList.add('selected');
+                }
+                if (prefs.lighting) {
+                    const el = document.querySelector(`[data-pref="lighting"][data-value="${prefs.lighting}"]`);
+                    if (el) el.classList.add('selected');
+                }
+                if (prefs.seating) {
+                    const el = document.querySelector(`[data-pref="seating"][data-value="${prefs.seating}"]`);
+                    if (el) el.classList.add('selected');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

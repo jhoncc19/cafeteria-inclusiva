@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa de Ruido - Café Aroma Inclusivo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .hour-card {
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .hour-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .bg-silencioso { background: linear-gradient(135deg, #28a745, #20c997); }
+        .bg-moderado { background: linear-gradient(135deg, #ffc107, #ffb300); color: #333; }
+        .bg-concurrido { background: linear-gradient(135deg, #fd7e14, #e8590c); }
+        .bg-ruidoso { background: linear-gradient(135deg, #dc3545, #c82333); }
+        .best-hour-card {
+            background: linear-gradient(135deg, #6f4e37 0%, #4a2c17 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5" style="margin-top: 80px;">
+        <div class="text-center mb-5">
+            <h1><i class="fas fa-volume-down text-primary me-2"></i>Mapa de Ruido en Tiempo Real</h1>
+            <p class="lead text-muted">
+                Conoce los niveles de ruido por hora y elige el mejor momento para visitarnos
+            </p>
+        </div>
+
+        <!-- Estado actual -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <i class="fas fa-clock me-2"></i>Estado actual por local
+            </div>
+            <div class="card-body">
+                <div class="row" id="currentStatus">
+                    <div class="col-12 text-center py-4">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mejores horas -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <i class="fas fa-star me-2"></i>Mejores horas para visitar
+            </div>
+            <div class="card-body">
+                <div class="row g-3" id="bestHours">
+                    <div class="col-12 text-center py-4">
+                        <div class="spinner-border text-success"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráfico por hora -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-chart-bar me-2"></i>Nivel promedio por hora</span>
+                    <select class="form-select form-select-sm" id="locationSelect" style="width: auto;">
+                        <option value="centro">Centro</option>
+                        <option value="norte">Norte</option>
+                        <option value="sur">Sur</option>
+                        <option value="este">Este</option>
+                    </select>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row g-2" id="hourlyChart">
+                    <div class="col-12 text-center py-4">
+                        <div class="spinner-border text-primary"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h6 class="mb-3"><i class="fas fa-info-circle me-2"></i>Leyenda</h6>
+                <div class="row g-2">
+                    <div class="col-md-3 col-6">
+                        <div class="bg-silencioso text-white p-2 rounded text-center">
+                            🔇 Silencioso<br><small>&lt; 40 dB</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-moderado p-2 rounded text-center">
+                            🔉 Moderado<br><small>40-60 dB</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-concurrido text-white p-2 rounded text-center">
+                            🔊 Concurrido<br><small>60-75 dB</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="bg-ruidoso text-white p-2 rounded text-center">
+                            📢 Ruidoso<br><small>&gt; 75 dB</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script>
+        const API_URL = '/api';
+
+        // Cargar estado actual
+        async function loadCurrentStatus() {
+            try {
+                const res = await fetch(`${API_URL}/noise/map`);
+                const data = await res.json();
+                
+                const container = document.getElementById('currentStatus');
+                container.innerHTML = '';
+                
+                if (data.success && data.data.length > 0) {
+                    data.data.forEach(loc => {
+                        const cat = loc.current.category || 'moderado';
+                        const emoji = {
+                            'silencioso': '🔇',
+                            'moderado': '🔉',
+                            'concurrido': '🔊',
+                            'ruidoso': '📢'
+                        }[cat] || '❓';
+                        
+                        container.innerHTML += `
+                            <div class="col-md-3 col-6 mb-3">
+                                <div class="text-center p-3 border rounded">
+                                    <h6 class="fw-bold">${loc.name}</h6>
+                                    <div class="bg-${cat} text-white p-2 rounded mb-2">
+                                        ${emoji} ${cat.toUpperCase()}
+                                    </div>
+                                    <div class="fs-4 fw-bold">${loc.current.decibels || 0} <small>dB</small></div>
+                                    <small class="text-muted">Ocupación: ${loc.current.occupancy || 0}%</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div class="col-12 text-center">No hay datos disponibles</div>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Cargar mejores horas
+        async function loadBestHours() {
+            try {
+                const res = await fetch(`${API_URL}/noise/best-hours`);
+                const data = await res.json();
+                
+                const container = document.getElementById('bestHours');
+                container.innerHTML = '';
+                
+                if (data.success && data.data.length > 0) {
+                    data.data.forEach(hour => {
+                        container.innerHTML += `
+                            <div class="col-md-4">
+                                <div class="best-hour-card">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="fs-4 fw-bold">${hour.timeRange}</span>
+                                        <i class="fas fa-thumbs-up"></i>
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="fas fa-volume-down me-2"></i>
+                                        ${hour.avgDecibels} dB promedio
+                                    </div>
+                                    <div class="mb-2">
+                                        <i class="fas fa-users me-2"></i>
+                                        ${hour.occupancy}% ocupación
+                                    </div>
+                                    <small class="opacity-75">${hour.recommendation}</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div class="col-12 text-center">No hay datos</div>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Cargar gráfico por hora
+        async function loadHourlyChart() {
+            const locationId = document.getElementById('locationSelect').value;
+            
+            try {
+                const res = await fetch(`${API_URL}/noise/by-hour?locationId=${locationId}`);
+                const data = await res.json();
+                
+                const container = document.getElementById('hourlyChart');
+                container.innerHTML = '';
+                
+                if (data.success && data.data.length > 0) {
+                    data.data.forEach(hour => {
+                        container.innerHTML += `
+                            <div class="col-md-2 col-4">
+                                <div class="hour-card bg-${hour.category}" title="${hour.avgDecibels} dB">
+                                    <div class="fw-bold">${hour.label}</div>
+                                    <div class="fs-5">${hour.avgDecibels}<small>dB</small></div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    container.innerHTML = '<div class="col-12 text-center">No hay datos para este local</div>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCurrentStatus();
+            loadBestHours();
+            loadHourlyChart();
+            
+            document.getElementById('locationSelect')
+                .addEventListener('change', loadHourlyChart);
+            
+            // Recargar cada 60 segundos
+            setInterval(loadCurrentStatus, 60000);
+        });
+    </script>
+</body>
+</html>

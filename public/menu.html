@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Aroma - Menú Completo</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader-wrapper">
+        <div class="loader">
+            <i class="fas fa-coffee"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- El navbar se inserta automáticamente con js/navbar.js -->
+
+    <!-- Header del Menú -->
+    <header class="menu-header text-center text-white">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Nuestro Menú</h1>
+            <p class="lead">Explora nuestra deliciosa selección de bebidas y alimentos</p>
+        </div>
+    </header>
+
+    <!-- Filtros del Menú -->
+    <section class="menu-filters py-4">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-auto mb-2">
+                    <button class="btn filter-btn active" data-filter="all">
+                        <i class="fas fa-th-large me-2"></i>Todos
+                    </button>
+                </div>
+                <div class="col-auto mb-2">
+                    <button class="btn filter-btn" data-filter="calientes">
+                        <i class="fas fa-mug-hot me-2"></i>Bebidas Calientes
+                    </button>
+                </div>
+                <div class="col-auto mb-2">
+                    <button class="btn filter-btn" data-filter="frias">
+                        <i class="fas fa-snowflake me-2"></i>Bebidas Frías
+                    </button>
+                </div>
+                <div class="col-auto mb-2">
+                    <button class="btn filter-btn" data-filter="dulces">
+                        <i class="fas fa-cake me-2"></i>Postres y Dulces
+                    </button>
+                </div>
+                <div class="col-auto mb-2">
+                    <button class="btn filter-btn" data-filter="salados">
+                        <i class="fas fa-bread-slice me-2"></i>Platos Salados
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contenido del Menú -->
+    <section class="menu-items py-5">
+        <div class="container">
+            <!-- Bebidas Calientes -->
+            <div class="menu-category" data-category="calientes">
+                <h2 class="category-title mb-4">
+                    <i class="fas fa-mug-hot me-2"></i>Bebidas Calientes
+                </h2>
+                <div class="row g-4">
+                    <!-- Espresso -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="calientes">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?w=400&h=300&fit=crop" class="card-img-top" alt="Espresso">
+                            <div class="card-body">
+                                <h5 class="card-title">Espresso</h5>
+                                <p class="card-text">Café concentrado de sabor intenso, perfecto para los amantes del café puro.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$2.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Espresso" data-price="2.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Americano -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="calientes">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1551030173-122a45c7f74c?w=400&h=300&fit=crop" class="card-img-top" alt="Americano">
+                            <div class="card-body">
+                                <h5 class="card-title">Americano</h5>
+                                <p class="card-text">Espresso suave con agua caliente, ideal para disfrutar lentamente.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$3.00</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Americano" data-price="3.00">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Latte -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="calientes">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=300&fit=crop" class="card-img-top" alt="Latte">
+                            <div class="card-body">
+                                <h5 class="card-title">Café Latte</h5>
+                                <p class="card-text">Espresso con leche cremosa y arte latte personalizado.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$4.00</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Café Latte" data-price="4.00">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cappuccino -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="calientes">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop" class="card-img-top" alt="Cappuccino">
+                            <div class="card-body">
+                                <h5 class="card-title">Cappuccino</h5>
+                                <p class="card-text">Espresso con espuma de leche cremosa y toque de canela.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$4.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Cappuccino" data-price="4.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Mocha -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="calientes">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1578314675249-a6910f80cc4e?w=400&h=300&fit=crop" class="card-img-top" alt="Mocha">
+                            <div class="card-body">
+                                <h5 class="card-title">Mocha</h5>
+                                <p class="card-text">Espresso con chocolate caliente y leche vaporizada.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$5.00</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Mocha" data-price="5.00">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Chocolate Caliente -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="calientes">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1542990253-a781e04c0082?w=400&h=300&fit=crop" class="card-img-top" alt="Chocolate Caliente">
+                            <div class="card-body">
+                                <h5 class="card-title">Chocolate Caliente</h5>
+                                <p class="card-text">Chocolate belga derretido con leche cremosa y malvaviscos.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$4.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Chocolate Caliente" data-price="4.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bebidas Frías -->
+            <div class="menu-category mt-5" data-category="frias">
+                <h2 class="category-title mb-4">
+                    <i class="fas fa-snowflake me-2"></i>Bebidas Frías
+                </h2>
+                <div class="row g-4">
+                    <!-- Frappé -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="frias">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop" class="card-img-top" alt="Frappé">
+                            <div class="card-body">
+                                <h5 class="card-title">Frappé de Café</h5>
+                                <p class="card-text">Café helado batido con hielo, crema batida y caramelo.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$5.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Frappé de Café" data-price="5.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Iced Latte -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="frias">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=400&h=300&fit=crop" class="card-img-top" alt="Iced Latte">
+                            <div class="card-body">
+                                <h5 class="card-title">Iced Latte</h5>
+                                <p class="card-text">Espresso con leche fría y hielo, refrescante y delicioso.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$4.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Iced Latte" data-price="4.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Smoothie -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="frias">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=400&h=300&fit=crop" class="card-img-top" alt="Smoothie">
+                            <div class="card-body">
+                                <h5 class="card-title">Smoothie de Frutas</h5>
+                                <p class="card-text">Mezcla de frutas frescas con yogurt natural y miel.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$6.00</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Smoothie de Frutas" data-price="6.00">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Té Helado -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="frias">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=400&h=300&fit=crop" class="card-img-top" alt="Té Helado">
+                            <div class="card-body">
+                                <h5 class="card-title">Té Helado Artesanal</h5>
+                                <p class="card-text">Té negro con limón, menta fresca y hielo picado.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$3.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Té Helado Artesanal" data-price="3.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Postres y Dulces -->
+            <div class="menu-category mt-5" data-category="dulces">
+                <h2 class="category-title mb-4">
+                    <i class="fas fa-cake me-2"></i>Postres y Dulces
+                </h2>
+                <div class="row g-4">
+                    <!-- Tarta de Chocolate -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="dulces">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=400&h=300&fit=crop" class="card-img-top" alt="Tarta de Chocolate">
+                            <div class="card-body">
+                                <h5 class="card-title">Tarta de Chocolate</h5>
+                                <p class="card-text">Deliciosa tarta con chocolate belga, cremosa y suave.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$5.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Tarta de Chocolate" data-price="5.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Cheesecake -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="dulces">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1524351199678-941a58a3df50?w=400&h=300&fit=crop" class="card-img-top" alt="Cheesecake">
+                            <div class="card-body">
+                                <h5 class="card-title">Cheesecake de Frutos Rojos</h5>
+                                <p class="card-text">Clásico cheesecake con salsa de frutos rojos frescos.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$6.00</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Cheesecake" data-price="6.00">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Brownie -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="dulces">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1564355808539-22fda35bed7e?w=400&h=300&fit=crop" class="card-img-top" alt="Brownie">
+                            <div class="card-body">
+                                <h5 class="card-title">Brownie con Helado</h5>
+                                <p class="card-text">Brownie caliente con helado de vainilla y chocolate derretido.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$5.00</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Brownie con Helado" data-price="5.00">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Tiramisú -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="dulces">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=300&fit=crop" class="card-img-top" alt="Tiramisú">
+                            <div class="card-body">
+                                <h5 class="card-title">Tiramisú</h5>
+                                <p class="card-text">Postre italiano clásico con café, mascarpone y cacao.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$6.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Tiramisú" data-price="6.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Platos Salados -->
+            <div class="menu-category mt-5" data-category="salados">
+                <h2 class="category-title mb-4">
+                    <i class="fas fa-bread-slice me-2"></i>Platos Salados
+                </h2>
+                <div class="row g-4">
+                    <!-- Sándwich Club -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="salados">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&h=300&fit=crop" class="card-img-top" alt="Sándwich">
+                            <div class="card-body">
+                                <h5 class="card-title">Sándwich Club</h5>
+                                <p class="card-text">Pollo, tocino, lechuga, tomate y mayonesa en pan artesanal.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$7.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Sándwich Club" data-price="7.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Ensalada César -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="salados">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop" class="card-img-top" alt="Ensalada">
+                            <div class="card-body">
+                                <h5 class="card-title">Ensalada César</h5>
+                                <p class="card-text">Lechuga romana, crutones, parmesano y aderezo césar.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$6.50</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Ensalada César" data-price="6.50">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Quiche -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="salados">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=400&h=300&fit=crop" class="card-img-top" alt="Quiche">
+                            <div class="card-body">
+                                <h5 class="card-title">Quiche Lorraine</h5>
+                                <p class="card-text">Tarta salada con tocino, queso y crema, servida caliente.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$6.00</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Quiche Lorraine" data-price="6.00">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Panini -->
+                    <div class="col-lg-4 col-md-6 menu-item" data-category="salados">
+                        <div class="card h-100">
+                            <img src="https://images.unsplash.com/photo-1509722747041-616f39b57569?w=400&h=300&fit=crop" class="card-img-top" alt="Panini">
+                            <div class="card-body">
+                                <h5 class="card-title">Panini de Pollo</h5>
+                                <p class="card-text">Pollo a la parrilla, queso derretido y pesto en pan ciabatta.</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="price">$7.00</span>
+                                    <button class="btn btn-primary btn-sm btn-order" data-product="Panini de Pollo" data-price="7.00">Ordenar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- El footer se inserta automáticamente con js/navbar.js -->
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

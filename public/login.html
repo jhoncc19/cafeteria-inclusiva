@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Aroma - Iniciar Sesión</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 5rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-coffee me-2"></i>Café Aroma Inclusivo
+            </a>
+            <a href="/" class="btn btn-outline-light btn-sm">Inicio</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="login-container">
+            <h2 class="text-center mb-4">
+                <i class="fas fa-sign-in-alt me-2"></i>Iniciar Sesión
+            </h2>
+
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="loginEmail" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fas fa-sign-in-alt me-2"></i>Ingresar
+                </button>
+                
+                <p class="text-center mt-3 mb-0">
+                    ¿No tienes cuenta? 
+                    <a href="registro.html">Regístrate</a>
+                </p>
+            </form>
+
+            <hr class="my-4">
+            <p class="text-muted small mb-2">Credenciales de prueba:</p>
+            <ul class="small text-muted">
+                <li>Admin: admin@cafearoma.com / admin123</li>
+                <li>Cliente TEA: tea@test.com / test123</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

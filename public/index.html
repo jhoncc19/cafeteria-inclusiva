@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Aroma - Inicio</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Iconos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader-wrapper">
+        <div class="loader">
+            <i class="fas fa-coffee"></i>
+            <p>Cargando...</p>
+        </div>
+    </div>
+
+    <!-- El navbar se inserta automáticamente con js/navbar.js -->
+
+    <!-- Hero Section -->
+    <header class="hero-section text-center text-white">
+        <div class="hero-overlay"></div>
+        <div class="container position-relative">
+            <h1 class="display-3 fw-bold mb-3">Bienvenidos a Café Aroma</h1>
+            <p class="lead mb-4">Descubre la experiencia del verdadero café artesanal</p>
+            <div class="hero-buttons">
+                <a href="menu.html" class="btn btn-primary btn-lg me-3">
+                    <i class="fas fa-coffee me-2"></i>Ver Menú
+                </a>
+                <a href="reservar.html" class="btn btn-warning btn-lg me-3">
+                    <i class="fas fa-calendar-check me-2"></i>Reservar
+                </a>
+                <a href="mapa-ruido.html" class="btn btn-outline-light btn-lg">
+                    <i class="fas fa-volume-down me-2"></i>Mapa de Ruido
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- SECCIÓN DE IMPACTO SOCIAL -->
+    <section class="py-5" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+        <div class="container">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary mb-3 px-3 py-2">
+                    <i class="fas fa-heart me-1"></i> Compromiso Social
+                </span>
+                <h2 class="section-title">Un espacio para todos</h2>
+                <p class="lead text-muted">
+                    Café Aroma Inclusivo está diseñado pensando en la comunidad neurodivergente. 
+                    Anticipa, personaliza y disfruta sin estrés sensorial.
+                </p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-md-3">
+                    <div class="text-center p-4 bg-white rounded shadow-sm h-100">
+                        <i class="fas fa-volume-down fs-1 text-primary mb-3"></i>
+                        <h5>Mapa de Ruido</h5>
+                        <p class="small text-muted">
+                            Consulta en tiempo real el nivel de ruido de cada local antes de ir
+                        </p>
+                        <a href="mapa-ruido.html" class="btn btn-sm btn-outline-primary">
+                            Ver mapa
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-4 bg-white rounded shadow-sm h-100">
+                        <i class="fas fa-sliders-h fs-1 text-primary mb-3"></i>
+                        <h5>Personalización</h5>
+                        <p class="small text-muted">
+                            Elige iluminación, nivel de ruido y tipo de asiento
+                        </p>
+                        <a href="reservar.html" class="btn btn-sm btn-outline-primary">
+                            Reservar
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-4 bg-white rounded shadow-sm h-100">
+                        <i class="fas fa-image fs-1 text-primary mb-3"></i>
+                        <h5>Menú con Pictogramas</h5>
+                        <p class="small text-muted">
+                            Menú visual de fácil comprensión para todas las edades
+                        </p>
+                        <a href="menu.html#pictogramas" class="btn btn-sm btn-outline-primary">
+                            Ver menú
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="text-center p-4 bg-white rounded shadow-sm h-100">
+                        <i class="fas fa-user-friends fs-1 text-primary mb-3"></i>
+                        <h5>Reservas Adaptadas</h5>
+                        <p class="small text-muted">
+                            Solicita acompañante de apoyo o espacio silencioso
+                        </p>
+                        <a href="reservar.html" class="btn btn-sm btn-outline-primary">
+                            Reservar
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Características Principales -->
+    <section class="features-section py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">¿Por qué elegir Café Aroma?</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-coffee"></i>
+                        </div>
+                        <h3>Café Premium</h3>
+                        <p>Seleccionamos los mejores granos de las regiones cafeteras más prestigiosas del mundo. Nuestro café es tostado artesanalmente para garantizar el sabor perfecto en cada taza.</p>
+                        <a href="menu.html#cafes" class="btn btn-link">Descubrir más →</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <h3>Hecho con Amor</h3>
+                        <p>Cada bebida y alimento es preparado por nuestros baristas certificados con dedicación y pasión. Utilizamos ingredientes frescos y locales para garantizar la mejor calidad.</p>
+                        <a href="nosotros.html" class="btn btn-link">Conoce al equipo →</a>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center p-4 h-100">
+                        <div class="feature-icon mb-3">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <h3>Ambiente Acogedor</h3>
+                        <p>Nuestros espacios están diseñados para que te sientas como en casa. WiFi gratuito, música suave y un ambiente relajado perfecto para trabajar, estudiar o socializar.</p>
+                        <a href="locales.html" class="btn btn-link">Ver nuestras sedes →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos Destacados -->
+    <section class="featured-products py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Nuestros Favoritos</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="card product-card h-100">
+                        <div class="card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1541167760496-1628856ab772?w=400&h=300&fit=crop" class="card-img-top" alt="Café Latte">
+                            <span class="badge bg-warning text-dark">Más Vendido</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Café Latte Especial</h5>
+                            <p class="card-text">Espresso doble con leche vaporizada y arte latte personalizado.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">$4.50</span>
+                                <button class="btn btn-primary btn-order" data-product="Café Latte Especial" data-price="4.50">
+                                    <i class="fas fa-plus me-1"></i> Ordenar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card product-card h-100">
+                        <div class="card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop" class="card-img-top" alt="Cappuccino">
+                            <span class="badge bg-danger">Nuevo</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Cappuccino Italiano</h5>
+                            <p class="card-text">Auténtico cappuccino con espuma cremosa y canela importada.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">$4.00</span>
+                                <button class="btn btn-primary btn-order" data-product="Cappuccino Italiano" data-price="4.00">
+                                    <i class="fas fa-plus me-1"></i> Ordenar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card product-card h-100">
+                        <div class="card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400&h=300&fit=crop" class="card-img-top" alt="Pastel">
+                            <span class="badge bg-success">Recomendado</span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Tarta de Chocolate</h5>
+                            <p class="card-text">Deliciosa tarta casera con chocolate belga y frutos rojos.</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="price">$5.50</span>
+                                <button class="btn btn-primary btn-order" data-product="Tarta de Chocolate" data-price="5.50">
+                                    <i class="fas fa-plus me-1"></i> Ordenar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonios -->
+    <section class="testimonials-section py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Lo que dicen nuestros clientes</h2>
+            <div class="testimonial-slider">
+                <div class="testimonial-card active">
+                    <div class="testimonial-content text-center p-5">
+                        <i class="fas fa-quote-left mb-3"></i>
+                        <p class="mb-4">"El mejor café que he probado en mi vida. El ambiente es perfecto para trabajar y el personal es increíblemente amable. Definitivamente mi lugar favorito en la ciudad."</p>
+                        <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&fit=crop" alt="María González" class="rounded-circle mb-3">
+                        <h5>María González</h5>
+                        <span class="text-muted">Cliente frecuente</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content text-center p-5">
+                        <i class="fas fa-quote-left mb-3"></i>
+                        <p class="mb-4">"La atención es excepcional y los postres son deliciosos. Recomiendo totalmente la tarta de chocolate y el cappuccino italiano. ¡No se arrepentirán!"</p>
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop" alt="Carlos Rodríguez" class="rounded-circle mb-3">
+                        <h5>Carlos Rodríguez</h5>
+                        <span class="text-muted">Food Blogger</span>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="testimonial-content text-center p-5">
+                        <i class="fas fa-quote-left mb-3"></i>
+                        <p class="mb-4">"Mi lugar favorito para reunirme con amigos. El ambiente es acogedor y siempre hay nuevas opciones en el menú. El personal recuerda mi orden habitual."</p>
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop" alt="Ana Martínez" class="rounded-circle mb-3">
+                        <h5>Ana Martínez</h5>
+                        <span class="text-muted">Diseñadora Gráfica</span>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonial-controls text-center mt-4">
+                <button class="btn btn-outline-secondary me-2" onclick="changeTestimonial(-1)">←</button>
+                <button class="btn btn-outline-secondary" onclick="changeTestimonial(1)">→</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter-section py-5 bg-dark text-white">
+        <div class="container text-center">
+            <h3 class="mb-4">Suscríbete a Nuestro Newsletter</h3>
+            <p class="mb-4">Recibe ofertas exclusivas y novedades directamente en tu correo</p>
+            <form id="newsletterForm" class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="input-group">
+                        <input type="email" class="form-control" placeholder="Tu correo electrónico" required>
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/navbar.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>
