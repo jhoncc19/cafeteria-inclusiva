@@ -271,7 +271,7 @@
         // Cargar mapa de ruido
         async function loadNoiseMap() {
             try {
-                const res = await fetch(`${API_URL}/noise/map`);
+                const res = await fetch(`${API_URL}/noise/map-actual`);
                 const data = await res.json();
                 
                 const container = document.getElementById('noiseMap');

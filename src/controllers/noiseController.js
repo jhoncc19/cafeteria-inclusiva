@@ -152,10 +152,189 @@ const getQuietestHours = async (req, res) => {
     });
   }
 };
+/**
+ * Obtener el estado actual por local (formato para reservar.html).
+ * GET /api/noise/map-actual
+ */
+const getCurrentMapByLocation = async (req, res) => {
+  try {
+    // Buscar qué locations existen en la BD
+    const locations = await NoiseLevel.distinct('locationId');
+    
+    // Si no hay ninguno, retornar array vacío
+    if (locations.length === 0) {
+      return res.json({
+        success: true,
+        data: [],
+        timestamp: new Date()
+      });
+    }
+    
+    // Obtener la última medición de cada local
+    const mapData = await Promise.all(
+      locations.map(async (loc) => {
+        const latest = await NoiseLevel.findOne({ locationId: loc })
+          .sort('-timestamp')
+          .lean();
+        
+        return {
+          locationId: loc,
+          name: getLocationName(loc),
+          current: latest ? {
+            decibels: latest.decibels || 0,
+            category: latest.category || 'moderado',
+            occupancy: latest.occupancy || 0,
+            timestamp: latest.timestamp
+          } : {
+            decibels: 0,
+            category: 'sin-datos',
+            occupancy: 0
+          }
+        };
+      })
+    );
+    
+    res.json({
+      success: true,
+      data: mapData,
+      timestamp: new Date()
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+};
 
+/**
+ * Obtener las mejores horas para visitar (formato para reservar.html).
+ * GET /api/noise/best-hours
+ */
+const getBestHours = async (req, res) => {
+  try {
+    const locationId = req.query.locationId || 'principal';
+    
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    
+    const hourlyData = await NoiseLevel.aggregate([
+      { 
+        $match: { 
+          timestamp: { $gte: weekAgo },
+          locationId 
+        } 
+      },
+      {
+        $group: {
+          _id: '$hourOfDay',
+          avgDecibels: { $avg: '$decibels' },
+          avgOccupancy: { $avg: '$occupancy' },
+          samples: { $sum: 1 }
+        }
+      },
+      { $sort: { avgDecibels: 1 } },
+      { $limit: 5 }
+    ]);
+    
+    const bestHours = hourlyData.map(h => ({
+      hour: h._id,
+      timeRange: `${h._id.toString().padStart(2, '0')}:00 - ${(h._id + 1).toString().padStart(2, '0')}:00`,
+      avgDecibels: Math.round(h.avgDecibels),
+      occupancy: Math.round(h.avgOccupancy),
+      samples: h.samples,
+      recommendation: h.avgDecibels < 50 
+        ? 'Ideal para personas con hipersensibilidad' 
+        : 'Ambiente tranquilo'
+    }));
+    
+    res.json({
+      success: true,
+      data: bestHours
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Obtener datos por hora (formato para gráfico).
+ * GET /api/noise/by-hour
+ */
+const getNoiseByHour = async (req, res) => {
+  try {
+    const locationId = req.query.locationId || 'principal';
+    
+    const weekAgo = new Date();
+    weekAgo.setDate(weekAgo.getDate() - 7);
+    
+    const hourlyData = await NoiseLevel.aggregate([
+      { 
+        $match: { 
+          timestamp: { $gte: weekAgo },
+          locationId 
+        } 
+      },
+      {
+        $group: {
+          _id: '$hourOfDay',
+          avgDecibels: { $avg: '$decibels' },
+          avgOccupancy: { $avg: '$occupancy' },
+          samples: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]);
+    
+    const chartData = hourlyData.map(h => {
+      let cat;
+      if (h.avgDecibels < 50) cat = 'silencioso';
+      else if (h.avgDecibels < 65) cat = 'moderado';
+      else if (h.avgDecibels < 80) cat = 'concurrido';
+      else cat = 'ruidoso';
+      
+      return {
+        hour: h._id,
+        label: `${h._id.toString().padStart(2, '0')}:00`,
+        avgDecibels: Math.round(h.avgDecibels),
+        avgOccupancy: Math.round(h.avgOccupancy),
+        category: cat,
+        samples: h.samples
+      };
+    });
+    
+    res.json({
+      success: true,
+      data: chartData
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+};
+
+// Helper para obtener nombre de local
+function getLocationName(id) {
+  const names = {
+    centro: 'Café Aroma Centro',
+    norte: 'Café Aroma Norte',
+    sur: 'Café Aroma Sur',
+    este: 'Café Aroma Este',
+    principal: 'Café Aroma Principal'
+  };
+  return names[id] || `Café Aroma ${id}`;
+}
 module.exports = {
   recordNoise,
   getCurrentNoise,
   getNoiseMap,
-  getQuietestHours
+  getQuietestHours,
+  getCurrentMapByLocation,
+  getBestHours,
+  getNoiseByHour
 };
