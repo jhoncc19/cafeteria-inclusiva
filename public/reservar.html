@@ -39,10 +39,11 @@
         .noise-moderado { background: #fff3cd; color: #856404; }
         .noise-concurrido { background: #ffe5b4; color: #8a5a00; }
         .noise-ruidoso { background: #f8d7da; color: #721c24; }
+        .noise-sin-datos { background: #e2e3e5; color: #383d41; }
     </style>
 </head>
 <body>
-    <div class="loader-wrapper">
+    <div class="loader-wrapper" id="pageLoader">
         <div class="loader"><i class="fas fa-coffee"></i></div>
     </div>
 
@@ -238,25 +239,49 @@
     <script>
         const API_URL = '/api';
         const token = localStorage.getItem('token');
-        
-        // Redirigir si no está logueado
-        if (!token) {
-            alert('Debes iniciar sesión para reservar');
-            window.location.href = 'login.html';
-        }
-        
+
+        // Variables globales
         const preferences = {
             noiseLevel: null,
             lighting: null,
             seating: null
         };
 
-        // Fecha mínima = hoy
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('date').setAttribute('min', today);
-        document.getElementById('date').value = today;
+        // ========== OCULTAR LOADER INMEDIATAMENTE ==========
+        // No esperamos a DOMContentLoaded para que sea lo más rápido posible
+        function hideLoader() {
+            const loader = document.getElementById('pageLoader');
+            if (loader) {
+                loader.style.transition = 'opacity 0.3s ease';
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 300);
+            }
+        }
 
-        // Seleccionar preferencia
+        // Ocultar loader en cuanto la página esté lista
+        window.addEventListener('load', hideLoader);
+        // Fallback por si 'load' nunca dispara
+        setTimeout(hideLoader, 2000);
+
+        // ========== REDIRIGIR SI NO ESTÁ LOGUEADO ==========
+        if (!token) {
+            alert('Debes iniciar sesión para reservar');
+            window.location.href = 'login.html';
+        }
+
+        // ========== FECHA MÍNIMA = HOY ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            const today = new Date().toISOString().split('T')[0];
+            const dateInput = document.getElementById('date');
+            if (dateInput) {
+                dateInput.setAttribute('min', today);
+                dateInput.value = today;
+            }
+        });
+
+        // ========== SELECCIONAR PREFERENCIA ==========
         function selectPref(el) {
             const pref = el.dataset.pref;
             const value = el.dataset.value;
@@ -268,111 +293,146 @@
             preferences[pref] = value;
         }
 
-        // Cargar mapa de ruido
+        // ========== CARGAR MAPA DE RUIDO (ROBUSTO) ==========
         async function loadNoiseMap() {
+            const container = document.getElementById('noiseMap');
+            if (!container) return;
+            
             try {
                 const res = await fetch(`${API_URL}/noise/map-actual`);
-                const data = await res.json();
                 
-                const container = document.getElementById('noiseMap');
+                if (!res.ok) {
+                    throw new Error(`HTTP ${res.status}`);
+                }
+                
+                const data = await res.json();
                 container.innerHTML = '';
                 
-                if (data.success) {
+                if (data.success && Array.isArray(data.data) && data.data.length > 0) {
                     data.data.forEach(loc => {
-                        const category = loc.current.category || 'moderado';
+                        // Optional chaining para evitar errores si falta "current"
+                        const category = loc.current?.category || 'sin-datos';
+                        const decibels = loc.current?.decibels ?? 0;
+                        const name = loc.name || 'Local';
+                        
+                        const emoji = {
+                            'silencioso': '🔇',
+                            'moderado': '🔉',
+                            'concurrido': '🔊',
+                            'ruidoso': '📢',
+                            'sin-datos': '❓'
+                        }[category] || '❓';
+                        
                         container.innerHTML += `
                             <div class="col-md-3 col-6 mb-3">
                                 <div class="text-center">
-                                    <div class="fw-bold mb-2">${loc.name}</div>
+                                    <div class="fw-bold mb-2">${name}</div>
                                     <div class="noise-indicator noise-${category}">
-                                        ${category === 'silencioso' ? '🔇' : 
-                                          category === 'moderado' ? '🔉' : 
-                                          category === 'concurrido' ? '🔊' : '📢'}
-                                        ${category.toUpperCase()}
+                                        ${emoji} ${category.toUpperCase()}
                                     </div>
                                     <small class="text-muted d-block mt-1">
-                                        ${loc.current.decibels || 0} dB
+                                        ${decibels} dB
                                     </small>
                                 </div>
                             </div>
                         `;
                     });
+                } else {
+                    container.innerHTML = `
+                        <div class="col-12 text-center text-muted">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Mapa de ruido no disponible en este momento
+                        </div>
+                    `;
                 }
             } catch (error) {
-                console.error('Error cargando mapa:', error);
+                console.warn('Error cargando mapa:', error.message);
+                container.innerHTML = `
+                    <div class="col-12 text-center text-muted">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        No se pudo cargar el mapa de ruido
+                    </div>
+                `;
             }
         }
 
-        // Enviar reserva
-        document.getElementById('reservationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // ========== ENVIAR RESERVA ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('reservationForm');
+            if (!form) return;
             
-            const reservationData = {
-                date: document.getElementById('date').value,
-                timeSlot: document.getElementById('timeSlot').value,
-                partySize: parseInt(document.getElementById('partySize').value),
-                sensoryPreferences: {
-                    noiseLevel: preferences.noiseLevel || 'moderado',
-                    lighting: preferences.lighting || 'luz-natural',
-                    seating: preferences.seating || 'zona-tranquila',
-                    musicVolume: document.getElementById('musicVolume').value
-                },
-                specialNeeds: {
-                    needsPictogramMenu: document.getElementById('needsPictogramMenu').checked,
-                    needsQuietSpace: document.getElementById('needsQuietSpace').checked,
-                    needsCompanion: document.getElementById('needsCompanion').checked,
-                    notes: document.getElementById('notes').value
-                }
-            };
-            
-            try {
-                const res = await fetch(`${API_URL}/reservations`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const reservationData = {
+                    date: document.getElementById('date').value,
+                    timeSlot: document.getElementById('timeSlot').value,
+                    partySize: parseInt(document.getElementById('partySize').value),
+                    sensoryPreferences: {
+                        noiseLevel: preferences.noiseLevel || 'moderado',
+                        lighting: preferences.lighting || 'luz-natural',
+                        seating: preferences.seating || 'zona-tranquila',
+                        musicVolume: document.getElementById('musicVolume').value
                     },
-                    body: JSON.stringify(reservationData)
-                });
+                    specialNeeds: {
+                        needsPictogramMenu: document.getElementById('needsPictogramMenu').checked,
+                        needsQuietSpace: document.getElementById('needsQuietSpace').checked,
+                        needsCompanion: document.getElementById('needsCompanion').checked,
+                        notes: document.getElementById('notes').value
+                    }
+                };
                 
-                const data = await res.json();
-                
-                if (data.success) {
-                    alert('✅ ¡Reserva creada exitosamente!\n\nTe esperamos en Café Aroma.');
-                    window.location.href = 'index.html';
-                } else {
-                    alert('❌ ' + (data.error || 'Error al crear reserva'));
+                try {
+                    const res = await fetch(`${API_URL}/reservations`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(reservationData)
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        alert('✅ ¡Reserva creada exitosamente!\n\nTe esperamos en Café Aroma.');
+                        window.location.href = 'index.html';
+                    } else {
+                        alert('❌ ' + (data.error || 'Error al crear reserva'));
+                    }
+                } catch (error) {
+                    alert('❌ Error de conexión');
                 }
-            } catch (error) {
-                alert('❌ Error de conexión');
-            }
+            });
         });
 
-        // Inicializar
+        // ========== INICIALIZACIÓN PRINCIPAL ==========
         document.addEventListener('DOMContentLoaded', () => {
+            // Cargar mapa de ruido (no bloquea si falla)
             loadNoiseMap();
-            
-            // Cargar preferencias del usuario si existen
-            const user = JSON.parse(localStorage.getItem('user') || '{}');
-            if (user.neuroProfile?.defaultPreferences) {
-                const prefs = user.neuroProfile.defaultPreferences;
-                preferences.noiseLevel = prefs.noiseLevel;
-                preferences.lighting = prefs.lighting;
-                preferences.seating = prefs.seating;
-                
-                // Marcar visualmente
-                if (prefs.noiseLevel) {
-                    const el = document.querySelector(`[data-pref="noiseLevel"][data-value="${prefs.noiseLevel}"]`);
-                    if (el) el.classList.add('selected');
+
+            // Cargar preferencias del usuario
+            try {
+                const user = JSON.parse(localStorage.getItem('user') || '{}');
+                if (user.neuroProfile?.defaultPreferences) {
+                    const prefs = user.neuroProfile.defaultPreferences;
+                    preferences.noiseLevel = prefs.noiseLevel;
+                    preferences.lighting = prefs.lighting;
+                    preferences.seating = prefs.seating;
+
+                    // Marcar visualmente las opciones guardadas
+                    ['noiseLevel', 'lighting', 'seating'].forEach(prefKey => {
+                        const val = prefs[prefKey];
+                        if (val) {
+                            const el = document.querySelector(
+                                `[data-pref="${prefKey}"][data-value="${val}"]`
+                            );
+                            if (el) el.classList.add('selected');
+                        }
+                    });
                 }
-                if (prefs.lighting) {
-                    const el = document.querySelector(`[data-pref="lighting"][data-value="${prefs.lighting}"]`);
-                    if (el) el.classList.add('selected');
-                }
-                if (prefs.seating) {
-                    const el = document.querySelector(`[data-pref="seating"][data-value="${prefs.seating}"]`);
-                    if (el) el.classList.add('selected');
-                }
+            } catch (e) {
+                console.warn('Error cargando preferencias:', e.message);
             }
         });
     </script>
