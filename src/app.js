@@ -19,6 +19,8 @@ const noiseRoutes = require('./routes/noiseRoutes');
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 // ============ MIDDLEWARES DE SEGURIDAD ============
 app.use(helmet({
   contentSecurityPolicy: false  // Permitir CDN de Bootstrap/FontAwesome
