@@ -1,6 +1,6 @@
 {
   "name": "cafeteria-crud",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Aplicación CRUD para Café Aroma con optimización de consultas",
   "main": "src/app.js",
   "scripts": {
